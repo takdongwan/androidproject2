@@ -14,6 +14,6 @@ class UserFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         var view =LayoutInflater.from(activity).inflate(R.layout.fragment_user,container,false)
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return view
     }
 }

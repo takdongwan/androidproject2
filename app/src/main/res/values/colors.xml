@@ -12,4 +12,10 @@
     <color name="colorGoogleSignInPressed">#b02513</color>
     <color name="colorEmailSignIn">#009688</color>
     <color name="colorEmailSignInPressed">#004D40</color>
+    <color name="colorAlarm">#001122</color>
+    <color name="colorDetail">#AA2244</color>
+    <color name="colorGrid">#CC3366</color>
+    <color name="colorUser">#DD4488</color>
+
+
 </resources>

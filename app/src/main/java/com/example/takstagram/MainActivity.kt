@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
                 return true
             }
         }
-        return false //어떤 조건도 만족시키지 않을경우 false 를 넣어줌 
+        return false //어떤 조건도 만족시키지 않을경우 false 를 넣어줌
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

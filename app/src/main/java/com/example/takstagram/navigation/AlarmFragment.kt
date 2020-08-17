@@ -10,6 +10,6 @@ import com.example.takstagram.R
 class AlarmFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view =LayoutInflater.from(activity).inflate(R.layout.fragment_alarm,container,false)
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return view
     }
 }
