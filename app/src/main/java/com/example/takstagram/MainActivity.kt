@@ -1,17 +1,19 @@
 package com.example.takstagram
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import com.example.takstagram.navigation.AlarmFragment
-import com.example.takstagram.navigation.DetailViewFragment
-import com.example.takstagram.navigation.GridFragment
-import com.example.takstagram.navigation.UserFragment
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.takstagram.navigation.*
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
+import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSelectedListener {
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
@@ -29,8 +31,10 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
                 return true
             }
             R.id.action_add_photo -> {
-
-                return true
+                if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED) {//스토ㅓ리지를 가져올 권한이있는지 체크
+                   startActivity(Intent(this, AddPhotoActivity::class.java))
+                }
+                    return true
             }
             R.id.action_favorite_alarm -> {
                 var alarmFragment = AlarmFragment()
@@ -50,6 +54,7 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),1)
     }
 
 
