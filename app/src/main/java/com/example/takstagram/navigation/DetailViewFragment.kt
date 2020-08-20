@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.takstagram.R
 import com.example.takstagram.navigation.model.ContentDTO
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -18,11 +19,11 @@ import kotlinx.android.synthetic.main.item_detail.view.*
 
 class DetailViewFragment : Fragment(){
     var firestore : FirebaseFirestore? = null
-
+    var uid : String? =null
     override fun onCreateView(nflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view =LayoutInflater.from(activity).inflate(R.layout.fragment_detail,container,false)
         firestore = FirebaseFirestore.getInstance()
-
+         uid= FirebaseAuth.getInstance().currentUser?.uid
         view.detailviewfragment_recyclerview.adapter =DetailViewRecyclerViewAdapter()
         view.detailviewfragment_recyclerview.layoutManager=LinearLayoutManager(activity)//화면을 세로로 배치하기위해 linear layout manger 사용
         return view
@@ -68,12 +69,37 @@ class DetailViewFragment : Fragment(){
             viewholder.detailviewitem_favoritecounter_textview.text = "Likes "+ contentDTOs!![p1].favoriteCount
             //profile Imgae
             Glide.with(p0.itemView.context).load(contentDTOs!![p1].imageUrl).into(viewholder.detailviewitem_profile_image)
+        //좋아요 버튼에 이미지
+            viewholder.detailviewitem_favorite_imageview.setOnClickListener {
+                favoriteEvent(p1)
+            }
+            //좋아요카운터와 색칠되거나 비어있는 이벤트
+            if(contentDTOs!![p1].favorites.containsKey(uid)){
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+            }else{
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
+            }
         }
 
+        fun favoriteEvent(position : Int){
+            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+            firestore?.runTransaction {
+                transaction ->
+
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+                if(contentDTO!!.favorites.containsKey(uid)){
+                    //버튼이 눌려있을 경우
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount -1
+                    contentDTO.favorites.remove(uid)
+
+                }else{
+                    //눌려있지 않을 경우우
+                    contentDTO?.favoriteCount= contentDTO?.favoriteCount+1
+                    contentDTO?.favorites[uid!!]= true
+                }
+                transaction.set(tsDoc,contentDTO)
+            }
+        }
     }
-
-
-
-
 }
 

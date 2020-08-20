@@ -55,6 +55,10 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         setContentView(R.layout.activity_main)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),1)
+
+
+        //메인화면이 뜨면 디테일뷰 프레그먼트가 메인화면으로 뜰수 있도록 setting test 용
+        bottom_navigation.selectedItemId = R.id.action_home
     }
 
 
