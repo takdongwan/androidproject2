@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.takstagram.navigation.*
@@ -54,6 +55,13 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
             }
         }
         return false //어떤 조건도 만족시키지 않을경우 false 를 넣어줌
+    }
+
+    //toolbar user name ,toolbar back이 기본적으로 숨겨진 상태가 되도록 설정
+    fun setToolbarDefault(){
+        toolbar_username.visibility = View.GONE
+        toolbar_btn_back.visibility = View.GONE
+        toolbar_title_image.visibility= View.VISIBLE
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
