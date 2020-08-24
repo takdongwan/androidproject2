@@ -1,5 +1,6 @@
 package com.example.takstagram.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -90,6 +91,13 @@ class DetailViewFragment : Fragment(){
                 bundle.putString("userId",contentDTOs[p1].userId)
                 fragment.arguments = bundle
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content,fragment)?.commit()
+            }
+            //말풍선을 클릭하게되면 comment activity가 뜨도록함 코드를 넣음
+            viewholder.detailviewitem_comment_imageview.setOnClickListener {
+                v ->
+                var intent = Intent(v.context,CommentActivity::class.java)
+                intent.putExtra("contentUid",contentUidList[p1])// 리스트에 포지션값을 넣어주게되면 선택한 이미지의 uid 의값이 담김
+                startActivity(intent)
             }
         }
 
