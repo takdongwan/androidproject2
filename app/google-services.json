@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "72498407489",
+    "firebase_url": "https://takstagram.firebaseio.com",
+    "project_id": "takstagram",
+    "storage_bucket": "takstagram.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72498407489:android:0948db701cc8ba8f093ec0",
+        "android_client_info": {
+          "package_name": "com.example.takstagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72498407489-2eh6npml5acvqiaiiakd351kn5t2hcra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.takstagram",
+            "certificate_hash": "48b220afa5c01a5ad26157607a516acba56b5a7c"
+          }
+        },
+        {
+          "client_id": "72498407489-8aer43q08nrd8um63vdbk28oikn9a3lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMU0vQOh8wLPU4fUA0pxBsFHuYF4dRH-0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "72498407489-8aer43q08nrd8um63vdbk28oikn9a3lk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
