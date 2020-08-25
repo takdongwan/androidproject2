@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.takstagram.LoginActivity
 import com.example.takstagram.MainActivity
 import com.example.takstagram.R
+import com.example.takstagram.navigation.model.AlarmDTO
 import com.example.takstagram.navigation.model.ContentDTO
 import com.example.takstagram.navigation.model.FollowDTO
 import com.google.firebase.auth.FirebaseAuth
@@ -133,7 +134,7 @@ class UserFragment : Fragment(){
                 followDTO = FollowDTO()
                 followDTO!!.followerCount =1
                 followDTO!!.followers[currentUserUid!!]= true
-
+                followerAlarm(uid!!) //최초에 누군가 팔로우를 할 경우 알람
                 transaction.set(tsDocFollower,followDTO!!)
                 return@runTransaction
             }
@@ -145,10 +146,22 @@ class UserFragment : Fragment(){
                 //It add my follower when I don't follow a third person
                 followDTO!!.followerCount = followDTO!!.followerCount+1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollower,followDTO!!)//db에 값 저장
             return@runTransaction
         }
+
+    }
+    fun followerAlarm(destinationUid : String) {
+        var alarmDTO =AlarmDTO()
+        alarmDTO.destinationUid =destinationUid
+        alarmDTO.userId = auth?.currentUser?.email
+        alarmDTO.uid = auth?.currentUser?.uid
+        alarmDTO.kind =2
+        alarmDTO.timestamp =System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
 
     }
     fun getProfileImage(){

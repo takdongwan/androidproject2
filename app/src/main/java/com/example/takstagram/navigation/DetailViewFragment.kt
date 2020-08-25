@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.takstagram.R
+import com.example.takstagram.navigation.model.AlarmDTO
 import com.example.takstagram.navigation.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -97,6 +98,9 @@ class DetailViewFragment : Fragment(){
                 v ->
                 var intent = Intent(v.context,CommentActivity::class.java)
                 intent.putExtra("contentUid",contentUidList[p1])// 리스트에 포지션값을 넣어주게되면 선택한 이미지의 uid 의값이 담김
+                intent.putExtra("destinationUid",contentDTOs[p1].uid)
+
+
                 startActivity(intent)
             }
         }
@@ -116,9 +120,20 @@ class DetailViewFragment : Fragment(){
                     //눌려있지 않을 경우우
                     contentDTO?.favoriteCount= contentDTO?.favoriteCount+1
                     contentDTO?.favorites[uid!!]= true
+                    favoriteAlarm(contentDTOs[position].uid!!)
                 }
                 transaction.set(tsDoc,contentDTO)
             }
+        }
+        fun favoriteAlarm(destinationUid : String){
+            var alarmDTO  =AlarmDTO()
+            alarmDTO.destinationUid =destinationUid
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp =System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
         }
     }
 }

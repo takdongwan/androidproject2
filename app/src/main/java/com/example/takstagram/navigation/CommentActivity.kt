@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.takstagram.R
+import com.example.takstagram.navigation.model.AlarmDTO
 import com.example.takstagram.navigation.model.ContentDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -18,10 +19,14 @@ import kotlinx.android.synthetic.main.item_comment.view.*
 
 class CommentActivity : AppCompatActivity() {
     var contentUid :String? =null
+    var destinationUid :String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
         contentUid= intent.getStringExtra("contentUid")//intent 에서 넘어온 string 값을 세팅
+        destinationUid = intent.getStringExtra("destinationUid")
 
         comment_recyclerview.adapter = CommentRecyclerviewAdapter()//comment recycler view와 adapter 연결
         comment_recyclerview.layoutManager =LinearLayoutManager(this)
@@ -32,10 +37,22 @@ class CommentActivity : AppCompatActivity() {
             comment.comment = comment_edit_message.text.toString()
             comment.timestamp =System.currentTimeMillis()   //현재시간입력하고 디비에 넣음
             FirebaseFirestore.getInstance().collection("images").document(contentUid!!).collection("comments").document().set(comment)
+            commentAlarm(destinationUid!!,comment_edit_message.text.toString())
             comment_edit_message.setText("")
+
         }
     }
 
+    fun commentAlarm(destinationUid : String , message : String){
+        var alarmDTO =AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.uid =FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.timestamp  =System.currentTimeMillis()
+        alarmDTO.message =message
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+    }
     inner class CommentRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var comments : ArrayList<ContentDTO.Comment> = arrayListOf()
 
