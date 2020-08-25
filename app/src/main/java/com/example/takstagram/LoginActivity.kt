@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
    }
     //SLIgr6XAGlrSYVdgelFqy6VrWnw=
 
-    override fun onStart() {
+    override fun onStart() {//자동로그인
         super.onStart()
         moveMainPage(auth?.currentUser)
     }

@@ -5,16 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
    >
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp">
+
         <ImageView
             android:id="@+id/account_iv_profile"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_account"
             android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:src="@drawable/ic_account" />
+
         <Button
             android:id="@+id/account_btn_follow_signout"
             android:text="@string/follow"

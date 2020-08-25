@@ -26,19 +26,23 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
+import kotlinx.android.synthetic.main.fragment_user.view.account_iv_profile
+
 class UserFragment : Fragment(){
 
-    var fragmentView :View? = null
+    var fragmentView : View? = null
     var firestore: FirebaseFirestore? = null
     var uid : String? = null
-    var auth :FirebaseAuth ?=null
+    var auth :FirebaseAuth? =null
     var currentUserUid : String? = null//내정보와 상대정보등을 확인할 수 있다.
     companion object{
         var PICK_PROFILE_FROM_ALBUM = 10  //PICK_PROFILE_FROM_ALBUM 을 compain object 로 선언 해줌, static 으로 선언해 준다 라고 보면 됨.
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        var fragmentView =LayoutInflater.from(activity).inflate(R.layout.fragment_user,container,false)
+        fragmentView =LayoutInflater.from(activity).inflate(R.layout.fragment_user,container,false)
+      //  var fragmentView =LayoutInflater.from(activity).inflate(R.layout.fragment_user,container,false)
         uid = arguments?.getString("destinationUid")
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -70,15 +74,26 @@ class UserFragment : Fragment(){
         fragmentView?.account_recyclerview?.adapter= UserFragmentRecyclerViewAdapter()
         fragmentView?.account_recyclerview?.layoutManager =GridLayoutManager(activity!!,3)
 
-        fragmentView?.account_iv_profile?.setOnClickListener {
 
-            var photoPickerIntent = Intent(Intent.ACTION_PICK)
+        fragmentView?.account_iv_profile?.setOnClickListener {
+            var photoPickerIntent= Intent(Intent.ACTION_PICK)
             photoPickerIntent.type ="image/*"
-            activity?.startActivityForResult(photoPickerIntent,PICK_PROFILE_FROM_ALBUM)
+            activity?.startActivityForResult(photoPickerIntent, PICK_PROFILE_FROM_ALBUM)
         }
+
         getProfileImage()
         getFollowerAndFollowing()
         return fragmentView
+    }
+
+    fun getProfileImage(){//올린이미지를 다운 받은 함수.
+        firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+            if(documentSnapshot == null ) return@addSnapshotListener
+            if(documentSnapshot.data != null) {
+                var url = documentSnapshot?.data!!["image"]
+               Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop()).into(fragmentView?.account_iv_profile!!)
+            }
+        }
     }
     fun getFollowerAndFollowing() {//화면에 팔로잉 느는거 보여주는 fun
         firestore?.collection("users")?.document(uid!!)?.addSnapshotListener{ documentSnapshot,firebaseFirestoreException  ->
@@ -102,7 +117,7 @@ class UserFragment : Fragment(){
         }
     }
     fun requestFollow(){
-        //save data to my accoun
+        //save data to my account
         var tsDocFollowing = firestore?.collection("users")?.document(currentUserUid!!)//transection
         firestore?.runTransaction { transaction ->
             var followDTO = transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java)
@@ -158,22 +173,25 @@ class UserFragment : Fragment(){
         alarmDTO.destinationUid =destinationUid
         alarmDTO.userId = auth?.currentUser?.email
         alarmDTO.uid = auth?.currentUser?.uid
-        alarmDTO.kind =2
+        alarmDTO.kind = 2
         alarmDTO.timestamp =System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
 
     }
-    fun getProfileImage(){
+   /* fun getProfileImage(){
         firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener{
             documentSnapshot,firebaseFirestoreException ->
             if(documentSnapshot == null) return@addSnapshotListener
             if(documentSnapshot.data != null){
                 var url = documentSnapshot?.data!!["image"]
+
                 Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop()).into(fragmentView?.account_iv_profile!!)
+               // Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop()).into(fragmentView?.account_iv_profile!!)
+             // Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop()).into(fragmentView?.account_iv_profile!!)
             }
         }
-    }
+    }*/
 
     inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         var contentDTOs :ArrayList<ContentDTO> = arrayListOf()
