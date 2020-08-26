@@ -10,6 +10,7 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.takstagram.navigation.*
+import com.example.takstagram.navigation.util.FcmPush
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -93,6 +94,12 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         //메인화면이 뜨면 디테일뷰 프레그먼트가 메인화면으로 뜰수 있도록 setting test 용
         bottom_navigation.selectedItemId = R.id.action_home
     }
+
+   /* override  fun onStop(){
+        super.onStop()
+        FcmPush.instance.sendMessage("mTJuSNhhKYgR2LL6WrOc28n9SvF3","hi","bye")
+     // 백그라운드로 앱을 보냈을 시 자동으로 메시지가 옴 .
+    }*/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

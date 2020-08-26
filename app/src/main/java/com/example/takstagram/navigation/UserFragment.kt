@@ -20,6 +20,7 @@ import com.example.takstagram.R
 import com.example.takstagram.navigation.model.AlarmDTO
 import com.example.takstagram.navigation.model.ContentDTO
 import com.example.takstagram.navigation.model.FollowDTO
+import com.example.takstagram.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -177,6 +178,8 @@ class UserFragment : Fragment(){
         alarmDTO.timestamp =System.currentTimeMillis()
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
+        var message = auth?.currentUser?.email + getString(R.string.alarm_favorite )
+        FcmPush.instance.sendMessage(destinationUid,"Takstagram",message)
 
     }
    /* fun getProfileImage(){

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.takstagram.R
 import com.example.takstagram.navigation.model.AlarmDTO
 import com.example.takstagram.navigation.model.ContentDTO
+import com.example.takstagram.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -133,6 +134,12 @@ class DetailViewFragment : Fragment(){
             alarmDTO.kind = 0
             alarmDTO.timestamp =System.currentTimeMillis()
             FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+
+
+            //좋아요 알람을 눌렀을 때 fcm 메시지를 전송
+            var message = FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
+            FcmPush.instance.sendMessage(destinationUid,"Takstagram",message)
 
         }
     }
