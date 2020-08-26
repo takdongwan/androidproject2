@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_main.*
@@ -63,6 +64,19 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         return false //어떤 조건도 만족시키지 않을경우 false 를 넣어줌
     }
 
+
+    fun registerPushToken(){
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
+            task ->
+            val token = task.result?.token
+            val uid =FirebaseAuth.getInstance().currentUser?.uid
+            val map = mutableMapOf<String,Any>()
+            map["pushToken"] =token!!
+
+            FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
+        }
+    }
+
     //toolbar user name ,toolbar back이 기본적으로 숨겨진 상태가 되도록 설정
     fun setToolbarDefault(){
         toolbar_username.visibility = View.GONE
@@ -75,7 +89,7 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),1)
 
-
+        registerPushToken()//로그인이 되자마자 db에 저장될수 있도록 함.
         //메인화면이 뜨면 디테일뷰 프레그먼트가 메인화면으로 뜰수 있도록 setting test 용
         bottom_navigation.selectedItemId = R.id.action_home
     }
